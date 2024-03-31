@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 )
 
 const PORT = ":8000"
@@ -15,13 +16,26 @@ type Res struct {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	premData, err := fetchTeamData()
-	if err != nil {
-		fmt.Fprintf(w, "error getting team data")
-	}
-	fixtures, err := fetchFixtureData()
-	if err != nil {
-		fmt.Fprintf(w, "error getting fixture stats")
+	var (
+		premData            TeamData
+		fixtures            Fixtures
+		teamErr, fixtureErr error
+	)
+
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		premData, teamErr = fetchTeamData()
+	}()
+	go func() {
+		defer wg.Done()
+		fixtures, fixtureErr = fetchFixtureData()
+	}()
+	wg.Wait()
+	if teamErr != nil || fixtureErr != nil {
+		fmt.Fprintf(w, "error fetching data")
 	}
 	response := Res{
 		Teams:    premData.Teams,
