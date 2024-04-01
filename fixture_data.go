@@ -27,9 +27,9 @@ func (k Kickoff) MarshalJSON() ([]byte, error) {
 type Fixture struct {
 	Id         int       `json:"id"`
 	TeamA      int       `json:"team_a"`
-	TeamB      int       `json:"team_b"`
+	TeamH      int       `json:"team_h"`
 	TeamAScore int       `json:"team_a_score"`
-	TeamBScore int       `json:"team_b_score"`
+	TeamHScore int       `json:"team_h_score"`
 	Finished   bool      `json:"finished"`
 	Kickoff    time.Time `json:"kickoff_time"`
 }
