@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -35,7 +34,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}()
 	wg.Wait()
 	if teamErr != nil || fixtureErr != nil {
-		fmt.Fprintf(w, "error fetching data")
+		http.Error(w, "could not fetch data", http.StatusNotFound)
+		return
 	}
 	response := Res{
 		Teams:    premData.Teams,
@@ -43,7 +43,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 	data, err := json.Marshal(response)
 	if err != nil {
-		fmt.Fprintf(w, "error marshalling data")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(data)

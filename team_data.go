@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -20,7 +21,7 @@ type TeamData struct {
 func fetchTeamData() (TeamData, error) {
 	resp, err := http.Get(TEAM_URL)
 	if err != nil {
-		return TeamData{}, err
+		return TeamData{}, fmt.Errorf("error fetching team data %w", err)
 	}
 	defer resp.Body.Close()
 
@@ -28,7 +29,7 @@ func fetchTeamData() (TeamData, error) {
 
 	err = json.NewDecoder(resp.Body).Decode(&d)
 	if err != nil {
-		return TeamData{}, err
+		return TeamData{}, fmt.Errorf("error decoding team data %w", err)
 	}
 	return d, nil
 }

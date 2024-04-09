@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -39,7 +40,7 @@ type Fixtures []Fixture
 func fetchFixtureData() (Fixtures, error) {
 	resp, err := http.Get(FIXTURES_URL)
 	if err != nil {
-		return Fixtures{}, err
+		return Fixtures{}, fmt.Errorf("error fetching fixture data %w", err)
 	}
 	defer resp.Body.Close()
 
@@ -47,7 +48,7 @@ func fetchFixtureData() (Fixtures, error) {
 
 	err = json.NewDecoder(resp.Body).Decode(&d)
 	if err != nil {
-		return Fixtures{}, err
+		return Fixtures{}, fmt.Errorf("error decoding fixture data %w", err)
 	}
 	return d, nil
 }
