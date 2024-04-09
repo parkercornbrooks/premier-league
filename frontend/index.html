@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premier League</title>
+</head>
+<body>
+  <h1>Premier League</h1>
+  <div class="content"></div>
+  <script type="module">
+    import { setView } from "./main.js"
+
+    const el = document.querySelector(".content")
+
+    fetch("/api/prem-data")
+      .then(res => res.json())
+      .then(data => setView(el, data))
+      .catch(e => console.log("error fetching", e));
+  </script>
+  <script src="main.js" type="module"></script>
+</body>
+</html>

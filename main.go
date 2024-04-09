@@ -51,6 +51,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", handler)
+	http.Handle("/", http.FileServer(http.Dir("./frontend")))
+	http.HandleFunc("/api/prem-data", handler)
 	log.Fatal(http.ListenAndServe(PORT, nil))
 }
